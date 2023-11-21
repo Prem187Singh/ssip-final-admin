@@ -3,6 +3,7 @@ import { Store } from '../forms/validation/store'
 import axios from 'axios'
 import base_url from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import {
     COffcanvas,
     COffcanvasHeader,
@@ -32,35 +33,18 @@ function ManageSubjects({visible,setVisible,SelectedTeacher}) {
     const navigate = useNavigate()
     const load_subjects_of_current_batch = async () =>{        
         const header = {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
-          'ngrok-skip-browser-warning': true
+          "Content-Type":"application/json",        
+          'ngrok-skip-browser-warning':true
         }
-        const params = {
-            batch_slug:currentBatch.slug,
-            teacher_id:SelectedTeacher.id
-        }
-        axios.get(`${base_url}/manage/get_subjects_of_current_batch`, {
-          headers: header,
-          params:params
-        })
-          .then((response) => {                               
-                setSubjectsToRender(response.data.data)                
-          })
-          .catch((error) => {
-            if (error) {
-              navigate("/404")
-            }
-            if(error.response.status === 401){
-              expireToken(refreshToken,(error,result)=>{
-                ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-                ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-              })
-            }
-            if(error.response.status === 302){
-                console.log(302)
-            }
-          }) 
+        const axiosInstance = axios.create()
+        let endpoint = `/manage/get_subjects_of_current_batch`;let method='get';let headers = header;
+        let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{batch_slug:currentBatch.slug,teacher_id:SelectedTeacher.id})
+        if(response_obj.error == false){
+          let response = response_obj.response
+          setSubjectsToRender(response.data.data)
+        }else{  
+            console.log(response_obj.error)
+        }        
       }
       let checkedSubjects = subjectsToRender
       const subjectSelectionChanged = (value,obj) => {
@@ -72,29 +56,19 @@ function ManageSubjects({visible,setVisible,SelectedTeacher}) {
       }    
 
       const add_subject_to_teacher_api = async(body)=>{
-        const headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-          'ngrok-skip-browser-warning': true
-        };
-    
-        axios.post(`${base_url}/manage/add_subjects_to_teacher`, body, { headers })
-          .then((response) => {
-                console.log(response.data);
-          })
-          .catch((error) => {
-            if (error) {
-              console.log(error);
-              navigate("/404")
-            }
-            if(error.response.status === 401){
-              expireToken(refreshToken,(error,result)=>{
-                ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.data.access });
-                ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.data.refresh });
-              })
-            }
-            
-          })
+        const header = {
+          "Content-Type":"application/json",      
+          'ngrok-skip-browser-warning':true
+        }
+        const axiosInstance = axios.create()
+        let endpoint = `/manage/add_subjects_to_teacher`;let method='post';let headers = header;
+        let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+        if(response_obj.error == false){
+          let response = response_obj.response
+          console.log(response.data);
+        }else{  
+          console.log(response_obj.error)
+        }
       }
 
       const add_subjects_to_teacher = async () =>{          

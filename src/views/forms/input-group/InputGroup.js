@@ -5,6 +5,7 @@ import { Store } from '../validation/store'
 import axios from 'axios'
 import base_url from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import {
   CButton,
   CCard,
@@ -33,32 +34,23 @@ const CustomStyles = (semSlug,setsubjects) => {
   const { accessToken,refreshToken, objectCount } = state
   const navigate = useNavigate()
   const add_subject = async (body) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true
-    };
-
-    axios.post(`${base_url}/manage/add_subjects`, body, { headers })
-      .then((response) => {
-          let changeSubjectCount = {...objectCount}
-          changeSubjectCount.subjects += 1
-          console.log(changeSubjectCount);
-          ctxDispatch({ type: 'GET_OBJECTS', payload: changeSubjectCount })
-          setsubjects(prevArray => [...prevArray, response.data.subject])
-      })
-      .catch((error) => {
-        if(error){
-          navigate("/404")
-        }
-        if(error.response.status === 401){
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.data.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.data.refresh });
-          })
-        }
-        
-      })
+    const header = {
+      "Content-Type":"application/json",      
+      'ngrok-skip-browser-warning':true
+    }
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/add_subjects`;let method='post';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+    if(response_obj.error == false){
+        let response = response_obj.response
+        let changeSubjectCount = {...objectCount}
+        changeSubjectCount.subjects += 1
+        console.log(changeSubjectCount);
+        ctxDispatch({ type: 'GET_OBJECTS', payload: changeSubjectCount })
+        setsubjects(prevArray => [...prevArray, response.data.subject])
+      }else{  
+        console.log(response_obj.error)
+      }    
   }
   
   const handleSubmit = (event) => {
@@ -122,31 +114,18 @@ const Select = (props) => {
   
   const load_subjects = async () => {
     const header = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-
-    axios.get(`${base_url}/manage/get_subjects`, {
-      params: { semester_slug: semSlug },
-      headers: header
-    })
-      .then((response) => {
-        console.log(response.data.data);
-        setsubjects(response.data.data)
-        
-      })
-      .catch((error) => {
-        if(error){
-          navigate("/404")
-        }
-        if(error.response.status === 401){
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-          })
-        }
-      }) 
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_subjects`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{ semester_slug: semSlug })
+    if(response_obj.error == false){
+      let response = response_obj.response
+      setsubjects(response.data.data)
+    }else{  
+      console.log(response_obj.error)
+    }
   }
 
   useEffect(() => {

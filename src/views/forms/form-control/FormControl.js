@@ -25,6 +25,7 @@ import {
   CTableDataCell
 } from '@coreui/react'
 import expireToken from 'src/global_function/unauthorizedToken'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import { useNavigate } from 'react-router-dom'
 const CustomStyles = (Semesters, setSemesters, batchSlug) => {
   const [validated, setValidated] = useState(false)
@@ -42,36 +43,26 @@ const CustomStyles = (Semesters, setSemesters, batchSlug) => {
 
 
   const add_sem = async (body) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-    };
-
-    axios.post(`${base_url}/manage/add_semester`, body, { headers })
-      .then((response) => {
-        console.log(response.data.data);
-        let changeCount = {...objectCount}
-        changeCount.semesters += 1
-        console.log(changeCount);
-        ctxDispatch({ type: 'GET_OBJECTS', payload: changeCount });
-        if(response.data.data.status)
-        {
-          setSemesters(prevArray => [...prevArray, response.data.data])
-        }
-        
-      })
-      .catch((error) => {
-        if(error){
-          navigate("/404")
-        }
-        if(error.response.status === 401){
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-          })
-        }
-        
-      })
+    const header = {
+      "Content-Type":"application/json",      
+      'ngrok-skip-browser-warning':true
+    }
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/add_semester`;let method='post';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+    if(response_obj.error == false){
+      let response = response_obj.response
+      let changeCount = {...objectCount}
+      changeCount.semesters += 1
+      console.log(changeCount);
+      ctxDispatch({ type: 'GET_OBJECTS', payload: changeCount });
+      if(response.data.data.status)
+      {
+        setSemesters(prevArray => [...prevArray, response.data.data])
+      }
+    }else{  
+      console.log(response_obj.error)
+    }    
   }
 
   const handleSubmit = (event) => {
@@ -127,40 +118,27 @@ const FormControl = (props) => {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken,refreshToken, semesters } = state
   const navigate = useNavigate()
-  const load_sem = async () => {
-    console.log(batchSlug);
-    console.log(accessToken);
+  const load_sem = async () => {    
     const header = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-
-    axios.get(`${base_url}/manage/get_semesters`, {
-      params: { batch_slug: batchSlug },
-      headers: header
-    })
-      .then((response) => {
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_semesters`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{batch_slug: batchSlug })
+    if(response_obj.error == false){
+      let response = response_obj.response      
         setSemesters(response.data.data)
         console.log(response.data.data);
         console.log(Semesters);
-      })
-      .catch((error) => {
-        if(error){
-          navigate("/404")
-        }
-        if(error.response.status === 401){
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-          })
-        }
-      })
+    }else{  
+      console.log(response_obj.error)
+    }
   }
 
   useEffect(() => {
     load_sem()
-  }, [accessToken]);
+  }, []);
 
 
   return (

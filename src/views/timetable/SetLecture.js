@@ -29,6 +29,7 @@ import axios from 'axios';
 import base_url from 'src/base_url';
 import { Store } from '../forms/validation/store';
 import { useNavigate } from 'react-router-dom';
+import { APIMiddleware } from 'src/global_function/GlobalFunctions';
 function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSelectSemester , setupdate_timetable }) {
   
 
@@ -48,24 +49,19 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
   }, [teacher_slug]);
   const load_object_for_lecture = async()=>{
     const header = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true,
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-    axios.get(`${base_url}/manage/timetable/get_objects_for_lecture`,{
-      params: {semester_slug : currentSelectSemester},
-      headers:header
-    })
-    .then((response)=>{
-        console.log(response.data);
-        setclassroom(response.data.classrooms)
-        setsubjects(response.data.subjects)
-    })
-    .catch((error)=>{
-      if(error){
-        navigate("/404")
-      }
-    })
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/timetable/get_objects_for_lecture`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{semester_slug : currentSelectSemester})
+    if(response_obj.error == false){
+      let response = response_obj.response      
+      setclassroom(response.data.classrooms)
+      setsubjects(response.data.subjects)
+    }else{  
+      console.log(response_obj.error)
+    }
   }
   const selectTeacher = (subjectslug) =>{
       subjects.map((item,index)=>{
@@ -76,34 +72,29 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
       })
   }
 
-  const handelsubmit = async () =>{
+  const handelsubmit = async (event) =>{
+    event.preventDefault()
     if(classroom_slug !== ""  && subject_slug !== "" && teacher_slug !== ""){
-        console.log("call");
         const header = {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-          'ngrok-skip-browser-warning': true,
+          "Content-Type":"application/json",      
+          'ngrok-skip-browser-warning':true
         }
+        const axiosInstance = axios.create()
+        let endpoint = `/manage/timetable/set_lecture_attributes`;let method='post';let headers = header;
         const body = {
           lecture_slug: lectureObj.slug,
           teacher_id:teacher_slug,
           subject_slug:subject_slug,
           classroom_slug: classroom_slug,
         }
-
-        axios.post(`${base_url}/manage/timetable/set_lecture_attributes`,body,{
-          headers:header
-        })
-        .then((response)=>{
-          console.log(response.data);
+        let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+        if(response_obj.error == false){
+          let response = response_obj.response
           setupdate_timetable(preval=> preval+1)
           setVisible(false)
-        })
-        .catch((error)=>{
-          if(error){
-            navigate("/404")
-          }
-        })
+        }else{  
+          console.log(response_obj.error)
+        }    
       }
   }
   const setDefaultValue = ()=>{

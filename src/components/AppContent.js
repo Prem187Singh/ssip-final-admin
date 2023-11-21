@@ -7,6 +7,7 @@ import { useContext } from 'react'
 import { Store } from 'src/views/forms/validation/store'
 import { jwtDecode } from "jwt-decode";
 import expireToken from 'src/global_function/unauthorizedToken'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 
 // routes config
 import routes from '../routes'
@@ -22,45 +23,27 @@ const AppContent = () => {
     }
     const loadBatches = async() => {
       const header = {
-        "Content-Type":"application/json",
-        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type":"application/json",        
         'ngrok-skip-browser-warning':true
       }
-      
-      axios.get(`${base_url}/manage/get_batches`,{headers:header})
-      .then((response)=>{
-        ctxDispatch({ type: 'GET_BATCHES', payload: response.data.data });
-        ctxDispatch({ type: 'SET_ACCESS_TOKEN_ACTIVE', payload: true});
-        //console.log(state.batches);
+      const axiosInstance = axios.create()
+      let endpoint = `/manage/get_batches`;let method='get';let headers = header;
+      let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers)
+      if(response_obj.error == false){
+        let response = response_obj.response
+        ctxDispatch({ type: 'GET_BATCHES', payload: response.data.data });        
         response.data.data.map((item) => {
           if(item.active){
             ctxDispatch({ type: 'CURRENT_BATCH_SLUG', payload: item });
           }
         })
-      })
-      .catch((error)=>{
-          if(error.response.status === 401){
-            console.log('here')
-            expireToken(refreshToken,(error,result)=>{
-              console.log(result)
-              ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-              ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });               
-              ctxDispatch({ type: 'SET_ACCESS_TOKEN_ACTIVE', payload: true});
-            })
-          }else{            
-            ctxDispatch({ type: 'SET_ACCESS_TOKEN_ACTIVE', payload: true});
-          }
-      })
+      }else{  
+        console.log(response_obj.error)
+      }
     }
-    useEffect(() => {      
-      if(accessTokenActive){
-        loadBatches()        
-      }      
-    },[accessTokenActive])
 
     useEffect(() => {      
-      if(accessToken){
-        console.log('called')
+      if(accessToken){        
         decodeToken()
         loadBatches()
       }

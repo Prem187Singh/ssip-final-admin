@@ -16,6 +16,7 @@ import Validation from '../forms/validation/Validation'
 import { useContext , useEffect } from 'react'
 import { Store } from 'src/views/forms/validation/store';
 import base_url from 'src/base_url'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import Breadcrumbnav from '../breadcrum/Breadcrumbnav';
 const Dashboard = () => {
   const [steps, setsteps] = useState('batch')
@@ -26,30 +27,27 @@ const Dashboard = () => {
   const [semCount, setsemCount] = useState(0);
   const [subCount, setsubCount] = useState(0);  
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { accessToken , refreshToken , profileDetails, objectCount ,accessTokenActive} = state  
+  const { accessToken , refreshToken , profileDetails, objectCount } = state  
 
-  useEffect(() => {           
-    if(accessTokenActive){
-      getObjectCounts()
-    }
-  }, [accessTokenActive]);
-  const getObjectCounts = () =>{
+  useEffect(() => {               
+      getObjectCounts()    
+  }, []);
+  
+  const getObjectCounts = async () =>{
     const header = {
-      "Content-Type":"application/json",
-      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type":"application/json",        
       'ngrok-skip-browser-warning':true
     }
-    axios.get(`${base_url}/manage/get_object_counts`,{headers:header})
-    .then((response)=>{
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_object_counts`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers)
+    if(response_obj.error == false){
+      let response = response_obj.response
+      console.log(response)
       ctxDispatch({ type: 'GET_OBJECTS', payload: response.data });
-        // setbatchCount(response.data.batches)
-        // setsemCount(response.data.semesters)
-        // setsubCount(response.data.subjects)
-
-    })
-    .catch((error)=>{
-      console.log(error.response);
-    })
+    }else{  
+      console.log(response_obj.error)
+    }
   }
   
   const chageSteps = (currentStep) =>{
@@ -70,7 +68,7 @@ const Dashboard = () => {
           <CRow xs={{ cols: 1 }} md={{ cols: 3 }} className="text-center">
             {progressExample.map((item, index) => (
               <CCol className="mb-sm-2 mb-0" key={index}>
-                <CButton style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => {chageSteps(item.nextStep)}}>
+                <CButton style={{ backgroundColor: 'transparent', border: 'none' }}>
                   <div className="text-medium-emphasis">{item.title}</div>
                   <strong style={{ color: 'black' }}>
                     {item.value} {item.percent}

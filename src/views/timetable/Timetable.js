@@ -33,6 +33,7 @@ import Breadcrumbnav from '../breadcrum/Breadcrumbnav'
 import expireToken from 'src/global_function/unauthorizedToken'
 import SetLecture from './SetLecture'
 import { useNavigate } from 'react-router-dom'
+import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 const Timetable = () => {
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const [visible, setVisible] = useState(false)
@@ -52,53 +53,34 @@ const Timetable = () => {
 
   const load_semester = async (batchslug) => {
     const header = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true,
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-
-    axios
-      .get(`${base_url}/manage/get_semesters`, {
-        params: { batch_slug: batchslug },
-        headers: header,
-      })
-      .then((response) => {
-        setSemesters(response.data.data)
-      })
-      .catch((error) => {
-        if(error){
-          naivgate("/404")
-        }
-        if (error.response.status === 401) {
-          expireToken(refreshToken, (error, result) => {
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access })
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh })
-          })
-        }
-      })
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_semesters`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{batch_slug: batchslug })
+    if(response_obj.error == false){
+      let response = response_obj.response      
+      setSemesters(response.data.data)
+    }else{  
+      console.log(response_obj.error)
+    }
   }
 
   const load_time_tale = async () => {
     const header = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true,
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-    console.log(currentSelectSemester)
-    axios
-      .get(`${base_url}/manage/timetable/get_timetable`, {
-        params: { semester_slug: currentSelectSemester },
-        headers: header,
-      })
-      .then((response) => {
-        console.log(response.data.timetable)
-        settimeTable(response.data.timetable)
-      })
-      .catch((error) => {
-        if(error){
-          naivgate("/404")
-        }
-      })
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/timetable/get_timetable`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{ semester_slug: currentSelectSemester })
+    if(response_obj.error == false){
+      let response = response_obj.response      
+      settimeTable(response.data.timetable)
+    }else{  
+      console.log(response_obj.error)
+    }
   }
   useEffect(() => {
     if (currentSelectSemester) {

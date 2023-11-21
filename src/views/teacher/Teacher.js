@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import expireToken from 'src/global_function/unauthorizedToken'
 import ManageSubjects from './ManageSubjects';
 import { useNavigate } from 'react-router-dom';
+import { APIMiddleware } from 'src/global_function/GlobalFunctions';
 import {
     CButton,
     CCard,
@@ -49,28 +50,19 @@ const CustomStyles = (setTeacherlist) => {
     const [Teacher_password, setTeacher_password] = useState("");
     console.log(currentBatch);
     const add_Teacher = async(body)=>{
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-        'ngrok-skip-browser-warning': true
-      };
-  
-      axios.post(`${base_url}/manage/add_teacher`, body, { headers })
-        .then((response) => {
-          
-          setTeacherlist(prevArray => [...prevArray, response.data.teacher])
-        })
-        .catch((error) => {
-          if(error){
-            navigate("/404")
-          }
-          if(error.response.status === 401){
-            expireToken(refreshToken,(error,result)=>{
-              ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.data.access });
-              ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.data.refresh });
-            })
-          }
-        })
+      const header = {
+        "Content-Type":"application/json",      
+        'ngrok-skip-browser-warning':true
+      }
+      const axiosInstance = axios.create()
+      let endpoint = `/manage/add_teacher`;let method='post';let headers = header;
+      let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
+      if(response_obj.error == false){
+        let response = response_obj.response
+        setTeacherlist(prevArray => [...prevArray, response.data.teacher])
+      }else{  
+        console.log(response_obj.error)
+      }    
     }
 
     const handleSubmit = (event) => {
@@ -138,29 +130,18 @@ const Teacher = () => {
   const { accessToken,refreshToken} = state
   const load_teacher = async () =>{
     const header = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`,
-      'ngrok-skip-browser-warning': true
+      "Content-Type":"application/json",        
+      'ngrok-skip-browser-warning':true
     }
-
-    axios.get(`${base_url}/manage/get_teachers`, {
-      headers: header
-    })
-      .then((response) => {
-        
-        setTeacherlist(response.data.teachers)
-      })
-      .catch((error) => {
-        if(error){
-          navigate("/404")
-        }
-        if(error.response.status === 401){
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-          })
-        }
-      }) 
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_teachers`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers)
+    if(response_obj.error == false){
+      let response = response_obj.response
+      setTeacherlist(response.data.teachers)
+    }else{  
+      console.log(response_obj.error)
+    }
   }
   
   

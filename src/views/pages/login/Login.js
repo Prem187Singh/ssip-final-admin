@@ -49,13 +49,15 @@ export default function Login(){
         }
         else{
           if(error.response.status === 401){
-            expireToken(refreshToken,(error,result)=>{
-              if(error){
-                console.log("someting went worng");
-              }
-              ctxDispatch({ type: 'USER_SIGNIN', payload: result });
+            console.log(error.response)
+            alert(error.response.data.detail)
+            // expireToken(refreshToken,(error,result)=>{
+            //   if(error){
+            //     console.log("someting went worng");
+            //   }
+            //   ctxDispatch({ type: 'USER_SIGNIN', payload: result });
               
-            })
+            // })
         }
         }
         
