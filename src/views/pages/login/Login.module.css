@@ -1,36 +1,24 @@
 .mobileLoginRafiki1 {
-  position: relative;
-  width: 654px;
-  height: 539px;
+  width: 300px;
+  height: 300px;
   overflow: hidden;
   flex-shrink: 0;
 }
-.illustration {
-  top: 78.9px;
-  left: -6px;
+.illustration {  
   /* width: 712px;  */
-  width: 1515px;
-  height: 657px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+  width: 300px;
+  height: 300px;      
 }
 .frame,
 .illustration,
 .login1 {
-  position: absolute;
 }
-.frame {
-  top: 735.9px;
-  left: 256px;
+.frame {  
   width: 142px;
   height: 37px;
   overflow: hidden;
 }
-.login1 {
-  top: 99.89px;
-  left: calc(50% - 75px);
+.login1 {  
   font-size: 61px;
   letter-spacing: 0.3px;
   line-height: 36.83px;
@@ -41,7 +29,6 @@
 }
 .starsharpIcon,
 .vectorIcon {
-  position: relative;
   width: 48.7px;
   height: 36.7px;
 }
@@ -68,14 +55,12 @@
 }
 .placeholder {
   flex: 1;
-  position: relative;
   letter-spacing: 0.3px;
   line-height: 48.72px;
   display: none;
   z-index: 2;
 }
 .removeredeyefilledIcon {
-  position: relative;
   width: 48.7px;
   height: 48.7px;
   overflow: hidden;
@@ -83,10 +68,7 @@
   display: none;
 }
 .adornEndContainer {
-  margin: 0 !important;
-  position: absolute;
-  top: calc(50% + 0.4px);
-  right: 0;
+  margin: 0 !important;  
   height: 2px;
   display: none;
   flex-direction: row;
@@ -96,7 +78,6 @@
 }
 .examplegmailcom {
   flex: 1;
-  position: relative;
   font-size: 17.3px;
   letter-spacing: 0.3px;
   line-height: 42.72px;
@@ -106,8 +87,7 @@
   border: none;
   border-bottom: 1px solid blue;
   width: 528px;
-  padding-left: 43px;
-  left: -50px;
+  padding-left: 43px;  
   color: black;
 }
 .examplegmailcom:focus-visible{
@@ -121,7 +101,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  position: relative;
   min-width: 48.7180290222168px;
   min-height: 48.7180290222168px;
   font-size: 32.48px;
@@ -129,17 +108,13 @@
   font-family: var(--font-roboto);
 }
 .underlineIcon {
-  position: relative;
   width: 457.1px;
   height: 2.5px;
 }
 .email,
 .frame1 {
-  position: absolute;
 }
-.email {
-  top: 0;
-  left: 198.7px;
+.email {  
   width: 676.7px;
   display: flex;
   flex-direction: column;
@@ -147,20 +122,16 @@
   justify-content: flex-start;
   gap: 12.18px;
 }
-.frame1 {
-  top: 210.9px;
-  left: 539.3px;
+.frame1 {  
   width: 875.5px;
   height: 98.8px;
   overflow: hidden;
 }
 .password {
-  position: relative;
   letter-spacing: 0.3px;
   line-height: 24.36px;
 }
 .iconlockround {
-  position: relative;
   width: 48.7px;
   height: 33.7px;
   overflow: hidden;
@@ -171,12 +142,9 @@
 }
 .adornEndContainer1,
 .div {
-  position: absolute;
   margin: 0 !important;
 }
-.adornEndContainer1 {
-  top: calc(50% - 1.05px);
-  right: 0;
+.adornEndContainer1 {  
   height: 2px;
   display: none;
   flex-direction: row;
@@ -184,9 +152,7 @@
   justify-content: flex-start;
   z-index: 3;
 }
-.div {
-  top: 4.1px;
-  left: 43.9px;
+.div {  
   font-size: 28px;
   letter-spacing: 0.3px;
   line-height: 48.72px;
@@ -199,7 +165,6 @@
   z-index: 4;
 }
 .underline {
-  position: relative;
   border-top: 2px solid var(--color-lightseagreen);
   box-sizing: border-box;
   width: 462.4px;
@@ -207,12 +172,9 @@
 }
 .frame2,
 .input {
-  position: absolute;
   height: 97.4px;
 }
-.input {
-  top: 0;
-  left: 198.7px;
+.input {  
   width: 676.7px;
   display: flex;
   flex-direction: column;
@@ -220,32 +182,24 @@
   justify-content: flex-start;
   gap: 12.18px;
 }
-.frame2 {
-  top: 330.5px;
-  left: 539.3px;
+.frame2 {  
   width: 875.5px;
   overflow: hidden;
 }
 .forgotPassword {
-  position: relative;
   letter-spacing: 3.03px;
   line-height: 36.83px;
   text-transform: uppercase;
   font-weight: 600;
   text-decoration: none;
 }
-.forgotPass {
-  position: absolute;
-  top: 0;
-  left: 0;
+.forgotPass {  
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
-.frame3 {
-  top: 452.9px;
-  left: 739.3px;
+.frame3 {  
   width: 470px;
   height: 37px;
   font-size: 15.2px;
@@ -254,30 +208,21 @@
 .frame3,
 .frame4,
 .googleSignIn {
-  position: absolute;
   overflow: hidden;
 }
-.googleSignIn {
-  top: 0;
-  left: 0;
+.googleSignIn {  
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
 }
-.frame4 {
-  top: 1324.9px;
-  left: 288px;
+.frame4 {  
   width: 76px;
   height: 62px;
 }
 .maskedIcon {
-  position: relative;
-  width: 25.5px;
-  height: 31.2px;
   display: none;
 }
 .button1 {
-  position: relative;
   letter-spacing: 2px;
   line-height: 36.83px;
   text-transform: uppercase;
@@ -291,11 +236,8 @@
 }
 .button,
 .frame5 {
-  position: absolute;
 }
-.button {
-  top: -1px;
-  left: calc(50% - 105.5px);
+.button {  
   border-radius: 12px;
   background-color: #222831;
   border: 1px solid var(--color-lightseagreen);
@@ -307,9 +249,7 @@
   justify-content: center;
   padding: 11.331049919128418px 60.62702178955078px;
 }
-.frame5 {
-  top: 476.9px;
-  left: 730.3px;
+.frame5 {  
   width: 75vh;
   height: 75px;
   overflow: hidden;
@@ -317,7 +257,6 @@
   color: #eee;
 }
 .login {
-  position: relative;
   border-radius: 52px;
   
   width: 100%;

@@ -33,7 +33,7 @@ const DefaultLayout = () => {
     })
     .catch((error)=>{             
       if(error.response.status === 401){
-          expireToken(refresh,setAccessTokenValid)          
+          expireToken(refresh,setAccessTokenValid)
       }
     })
   }

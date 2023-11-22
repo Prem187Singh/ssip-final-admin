@@ -11,7 +11,7 @@ import { CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavTitle,
-    name: 'Manage',
+    name: 'ADMNISTRATION',
   },
   {
     component: CNavItem,

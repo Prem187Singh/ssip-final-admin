@@ -20,22 +20,11 @@ const Breadcrumbnav = (props) => {
         subject: ["batch","semester","subject"],
     }
     return (
-        <>
-        <CRow className='mb-2'>
-                <CCol xl>
-                    <CCard>
-                        <CCardBody>
-                        <nav aria-label="breadcrumb">
-                            {objectCount.branch}
-                        </nav>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-        </CRow>
+        <>    
             <CRow className='mb-2'>
                 <CCol xl>
                     <CCard>
-                        <CCardBody>
+                        <CCardBody style={{display:'flex',justifyContent:'space-between'}}>
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb" style={{margin:'0'}}>
                                     <li className="breadcrumb-item active" aria-current="page">
@@ -52,7 +41,7 @@ const Breadcrumbnav = (props) => {
                                 </ol>                                                      
                             </nav>
 
-                            
+                            <span>Branch - {objectCount.branch}</span>
 
                             
                         </CCardBody>
