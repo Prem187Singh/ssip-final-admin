@@ -19,6 +19,7 @@ import {
   CToast,
   CToastHeader,
   CToastBody,
+  CToaster
 } from '@coreui/react'
 
 import axios from 'axios'
@@ -44,6 +45,7 @@ const Timetable = () => {
   const [lectureObj,setLectureObj] = useState(null)
   const [scheduleObj,setscheduleObj] = useState(null)
   const [update_timetabel,setupdate_timetable] = useState(0)
+  const [visibleLectureToast,setVisibleLectureToast] = useState(true)  
   const naivgate = useNavigate()
   useEffect(() => {
     if (currentBatch.slug) {
@@ -77,6 +79,7 @@ const Timetable = () => {
     let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{ semester_slug: currentSelectSemester })
     if(response_obj.error == false){
       let response = response_obj.response      
+      console.log(response)
       settimeTable(response.data.timetable)
     }else{  
       console.log(response_obj.error)
@@ -175,7 +178,27 @@ const Timetable = () => {
                                 key={lecture.slug}                                
                                 onClick={(e) => {editLecture(lecture, schedule); setVisible(true)}}
                                 >
-                                {lecture.subject ? (<div><strong>{lecture.subject.subject_name}</strong> <br/> {lecture.teacher.profile.name}<br/>{lecture.classroom.class_name}</div>) : '-'}
+                                  <CToaster placement="middle-start">
+                                  <CToast autohide={false} visible={visibleLectureToast}>
+                                    <CToastHeader closeButton>
+                                      <svg
+                                        className="rounded me-2"
+                                        width="20"
+                                        height="20"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        preserveAspectRatio="xMidYMid slice"
+                                        focusable="false"
+                                        role="img"
+                                      >
+                                        <rect width="100%" height="100%" fill="#007aff"></rect>
+                                      </svg>
+                                      <div className="fw-bold me-auto">CoreUI for React.js</div>
+                                      <small>7 min ago</small>
+                                    </CToastHeader>
+                                    <CToastBody>Hello, world! This is a toast message.</CToastBody>
+                                  </CToast>
+                                </CToaster>
+                                {lecture.subject ? (<div><strong style={{color:'gray'}}>{lecture.subject.subject_name}</strong></div>) : '-'}
                               </CTableDataCell>
                             ))}
                           </CTableRow>

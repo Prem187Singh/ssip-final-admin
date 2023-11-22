@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState,useContext } from 'react'
+import { Store } from 'src/views/forms/validation/store';
 import {    
     CCard,
     CCardBody,    
@@ -8,6 +10,9 @@ import {
 
 import "../../scss/panel.css"
 const Breadcrumbnav = (props) => {
+    const { state, dispatch: ctxDispatch } = useContext(Store);
+    const { objectCount } = state  
+    console.log(objectCount)
     const {currentStep , chageSteps }= props
     let breadcrumbs = {
         batch: ["batch"],
@@ -16,6 +21,17 @@ const Breadcrumbnav = (props) => {
     }
     return (
         <>
+        <CRow className='mb-2'>
+                <CCol xl>
+                    <CCard>
+                        <CCardBody>
+                        <nav aria-label="breadcrumb">
+                            {objectCount.branch}
+                        </nav>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+        </CRow>
             <CRow className='mb-2'>
                 <CCol xl>
                     <CCard>
@@ -33,7 +49,7 @@ const Breadcrumbnav = (props) => {
                                              <li className="breadcrumb-item active" aria-current="page" key={keys}><a onClick={() => {chageSteps(items)}} className={items === currentStep?"disabled":""}>{items}</a></li>
                                         ))
                                     }
-                                </ol>
+                                </ol>                                                      
                             </nav>
 
                             

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import base_url from 'src/base_url'
+
 // Used for handling expired tokens
 const APIMiddleware = async (reqInstance, endpoint, method, headers, body = null, params = null) => {
     // Get the access and refresh tokens
@@ -8,7 +9,7 @@ const APIMiddleware = async (reqInstance, endpoint, method, headers, body = null
     headers['Authorization'] = `Bearer ${access}`;
 
     let response_obj;
-
+    window.setProgress(100)
     if (method === 'get') {
         try {
             const response = await reqInstance.get(`${base_url}${endpoint}`, { headers, params });
@@ -37,8 +38,7 @@ const APIMiddleware = async (reqInstance, endpoint, method, headers, body = null
                 response_obj = { 'error': true, 'error': error };
             }
         }
-    }
-
+    }    
     return response_obj;
 };
 

@@ -6,12 +6,17 @@ import { Store } from 'src/views/forms/validation/store';
 import axios from 'axios';
 import base_url from 'src/base_url';
 import expireToken from 'src/global_function/unauthorizedToken';
+import LoadingBar from 'react-top-loading-bar';
 
 const DefaultLayout = () => {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken , refreshToken , profileDetails} = state
   const [_404,set404] = useState(true)
   const [accessTokenValid,setAccessTokenValid] = useState(false)
+  const [progress,setProgress] = useState(0);  
+  if (typeof window !== 'undefined') {
+    window.setProgress = setProgress;
+  }
 
   const checkAccessTokenAuthenticity = () => {
     const headers = {
@@ -68,13 +73,15 @@ const DefaultLayout = () => {
   if(accessToken && !_404 && accessTokenValid){
     return (    
       <div>
+  <LoadingBar color={'#1f6feb'} progress={progress}
+      onLoaderFinished={() => setProgress(0)} />
         <AppSidebar />
         <div className="wrapper d-flex flex-column min-vh-100 bg-light">
           <AppHeader />
           <div className="body flex-grow-1 px-3">
             <AppContent />
           </div>
-          <AppFooter />
+          <AppFooter/>
         </div>
       </div>    
   )

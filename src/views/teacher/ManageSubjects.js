@@ -65,7 +65,7 @@ function ManageSubjects({visible,setVisible,SelectedTeacher}) {
         let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,body,null)
         if(response_obj.error == false){
           let response = response_obj.response
-          console.log(response.data);
+          setVisible(false)          
         }else{  
           console.log(response_obj.error)
         }
@@ -147,7 +147,7 @@ function ManageSubjects({visible,setVisible,SelectedTeacher}) {
           </CTableBody>
         </CTable>
         <button className='btn btn-outline-dark form-control mt-4' type="submit" onClick={add_subjects_to_teacher}>
-          Add Subjects
+                  Set Subject
         </button>
       </CCardBody>
     </CCard>

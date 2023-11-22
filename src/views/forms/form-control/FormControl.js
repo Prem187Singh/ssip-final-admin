@@ -27,6 +27,7 @@ import {
 import expireToken from 'src/global_function/unauthorizedToken'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import { useNavigate } from 'react-router-dom'
+
 const CustomStyles = (Semesters, setSemesters, batchSlug) => {
   const [validated, setValidated] = useState(false)
 
