@@ -1,10 +1,11 @@
-import React, { useState  } from 'react'
+import React, { useState  ,Component } from 'react'
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { useContext } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
+
 import {
   CButton,
   CCard,
@@ -26,8 +27,10 @@ import {
 import { Store } from '../validation/store'
 import base_url from 'src/base_url'
 import expireToken from 'src/global_function/unauthorizedToken'
+import { showAlert } from 'src/global_function/GlobalFunctions'
 
 const CustomStyles = (Batches,setBatches,setBatchCout) => {
+  
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { accessToken, refreshToken, batches, currentBatch} = state
   const [validated, setValidated] = useState(false)
@@ -68,8 +71,11 @@ const CustomStyles = (Batches,setBatches,setBatchCout) => {
       batch_name: Start + "-" + EndYear
     }
     addBatches(body)
+    showAlert("success","Bactch Added successfully...!")
+    
   }
   return (
+    <>
     <CForm
       className="row g-3 needs-validation"
       noValidate
@@ -92,6 +98,7 @@ const CustomStyles = (Batches,setBatches,setBatchCout) => {
         </button>
       </CCol>
     </CForm>
+    </>
   )
 }
 
@@ -106,38 +113,26 @@ const Validation = (props) => {
   
   // function for the load batches
   
-  const loadBatches = async() => {
+const loadBatches = async() => {
     const header = {
-      "Content-Type":"application/json",
-      "Authorization": `Bearer ${accessToken}`,
+      "Content-Type":"application/json",        
       'ngrok-skip-browser-warning':true
     }
-    
-    axios.get(`${base_url}/manage/get_batches`,{headers:header})
-    .then((response)=>{
-      ctxDispatch({ type: 'GET_BATCHES', payload: response.data.data });
-      //console.log(state.batches);
-      
-       response.data.data.map((item)=>{
+    const axiosInstance = axios.create()
+    let endpoint = `/manage/get_batches`;let method='get';let headers = header;
+    let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,null)
+    if(response_obj.error == false){
+      ctxDispatch({ type: 'GET_BATCHES', payload: response.data.data });      
+      response.data.data.map((item)=>{
           if(item.active){
             console.log(item);
             ctxDispatch({ type: 'CURRENT_BATCH_SLUG', payload: item });    
           }
       })
-      
       setBatches(response.data.data)
-    })
-    .catch((error)=>{
-
-        if(error.response.status === 401){
-
-     
-          expireToken(refreshToken,(error,result)=>{
-            ctxDispatch({ type: 'ACCESS_TOKEN', payload: result.access });
-            ctxDispatch({ type: 'REFRESH_TOKEN', payload: result.refresh });
-          })
-        }
-    })
+    }else{  
+      console.log(response_obj.error)
+    }    
   }
 
   // useEffect(() => {

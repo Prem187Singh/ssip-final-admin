@@ -25,6 +25,7 @@ import {
   CTableDataCell,
 } from '@coreui/react'
 import { useNavigate } from 'react-router-dom'
+import { showAlert } from 'src/global_function/GlobalFunctions'
 const CustomStyles = (semSlug,setsubjects) => {
   const [validated, setValidated] = useState(false)
   const [SName, setSName] = useState("");
@@ -71,6 +72,7 @@ const CustomStyles = (semSlug,setsubjects) => {
     }
     event.preventDefault()
     add_subject(body)
+    showAlert("success","Subject Added successfully...!")
   }
   return (
     <CForm

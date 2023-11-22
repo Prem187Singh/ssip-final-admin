@@ -27,6 +27,7 @@ import {
 import expireToken from 'src/global_function/unauthorizedToken'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 import { useNavigate } from 'react-router-dom'
+import { showAlert } from 'src/global_function/GlobalFunctions'
 
 const CustomStyles = (Semesters, setSemesters, batchSlug) => {
   const [validated, setValidated] = useState(false)
@@ -81,6 +82,7 @@ const CustomStyles = (Semesters, setSemesters, batchSlug) => {
       end_date: Sedate
     }
     add_sem(body);
+    showAlert("success","Semester Added successfully...!")
   }
   return (
     <CForm

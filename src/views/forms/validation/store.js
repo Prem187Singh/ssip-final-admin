@@ -18,7 +18,6 @@ const initialState = {
   objectCount:[],
 
   accessTokenActive:false
-
 };
 
 function reducer(state, action) {

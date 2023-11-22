@@ -30,6 +30,7 @@ import base_url from 'src/base_url';
 import { Store } from '../forms/validation/store';
 import { useNavigate } from 'react-router-dom';
 import { APIMiddleware } from 'src/global_function/GlobalFunctions';
+import { showAlert } from 'src/global_function/GlobalFunctions'
 function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSelectSemester , setupdate_timetable }) {
   
 
@@ -95,6 +96,7 @@ function SetLecture({ visible, setVisible, scheduleObj, lectureObj , currentSele
         }else{  
           console.log(response_obj.error)
         }    
+        showAlert("success","Lecture Added successfully...!")
       }
   }
   const setDefaultValue = ()=>{

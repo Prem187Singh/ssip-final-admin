@@ -11,6 +11,7 @@ import { sygnet } from 'src/assets/brand/sygnet'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
+import smartrollicon from '../smartroll_logo.png'
 
 // sidebar nav config
 import navigation from '../_nav'
@@ -30,10 +31,7 @@ const AppSidebar = () => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}
     >
-      <CSidebarBrand className="d-none d-md-flex" to="/">
-        <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
-        <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} />
-      </CSidebarBrand>
+      <img className="p-3" src={smartrollicon}></img>
       <CSidebarNav>
         <SimpleBar>
           <AppSidebarNav items={navigation} />

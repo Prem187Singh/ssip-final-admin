@@ -21,7 +21,6 @@ import {
   CToastBody,
   CToaster
 } from '@coreui/react'
-
 import axios from 'axios'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import FormControl from '../forms/form-control/FormControl'
@@ -45,43 +44,52 @@ const Timetable = () => {
   const [lectureObj,setLectureObj] = useState(null)
   const [scheduleObj,setscheduleObj] = useState(null)
   const [update_timetabel,setupdate_timetable] = useState(0)
-  const [visibleLectureToast,setVisibleLectureToast] = useState(true)  
+
+  const [visibleLectureToast,setVisibleLectureToast] = useState(false)
+
+
   const naivgate = useNavigate()
   useEffect(() => {
     if (currentBatch.slug) {
       load_semester(currentBatch.slug)
     }
   }, [currentBatch])
-
   const load_semester = async (batchslug) => {
     const header = {
-      "Content-Type":"application/json",        
+      "Content-Type":"application/json",
       'ngrok-skip-browser-warning':true
     }
     const axiosInstance = axios.create()
     let endpoint = `/manage/get_semesters`;let method='get';let headers = header;
     let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{batch_slug: batchslug })
     if(response_obj.error == false){
-      let response = response_obj.response      
+      let response = response_obj.response
       setSemesters(response.data.data)
-    }else{  
+    }else{
       console.log(response_obj.error)
     }
   }
-
   const load_time_tale = async () => {
     const header = {
-      "Content-Type":"application/json",        
+      "Content-Type":"application/json",
       'ngrok-skip-browser-warning':true
     }
     const axiosInstance = axios.create()
     let endpoint = `/manage/timetable/get_timetable`;let method='get';let headers = header;
     let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,{ semester_slug: currentSelectSemester })
     if(response_obj.error == false){
-      let response = response_obj.response      
+      let response = response_obj.response
       console.log(response)
       settimeTable(response.data.timetable)
-    }else{  
+      const setVisibleTost = {}
+        response.data.timetable.schedules.map((item,index)=>{
+            item.lectures.map((lecture,index)=>{
+              setVisibleTost[lecture.slug] = false
+            })
+        })
+        console.log(setVisibleTost);
+        setVisibleLectureToast(setVisibleTost)
+    }else{
       console.log(response_obj.error)
     }
   }
@@ -90,12 +98,24 @@ const Timetable = () => {
       load_time_tale()
     }
   }, [currentSelectSemester,update_timetabel])
-    
   const editLecture = (lecture, schedule) => {
       console.log(lecture)
       console.log(schedule)
       setLectureObj(lecture)
       setscheduleObj(schedule)
+    }
+    const onMouseEnterHandel = (lecture_slug)=>{
+      console.log("enter");
+      setVisibleLectureToast(prevState => ({
+        ...prevState,
+        [lecture_slug]: true
+      }));
+    }
+    const onMouseLeaveHandel = (lecture_slug)=>{
+      setVisibleLectureToast(prevState => ({
+        ...prevState,
+        [lecture_slug]: false
+      }));
     }
   return (
     <>
@@ -121,7 +141,6 @@ const Timetable = () => {
           </CCard>
         </CCol>
       </CRow>
-
       <CRow>
         <CCol>
           <CCard>
@@ -139,9 +158,9 @@ const Timetable = () => {
                       focusable="false"
                       role="img"
                     >
-                      <rect width="100%" height="100%" fill="#007aff"></rect>
+                      <rect width="100%" height="100%" fill="#007AFF"></rect>
                     </svg>
-                    <div className="fw-bold me-auto">SMARTROLL ADMINISTRATION</div>                    
+                    <div className="fw-bold me-auto">SMARTROLL ADMINISTRATION</div>
                   </CToastHeader>
                   <CToastBody>Please select a semester!!</CToastBody>
                 </CToast>
@@ -175,11 +194,15 @@ const Timetable = () => {
                             <CTableHeaderCell key={index}>{schedule.day}</CTableHeaderCell>
                             {schedule.lectures.map((lecture, lectureindex) => (
                               <CTableDataCell
-                                key={lecture.slug}                                
+                                key={lecture.slug}
                                 onClick={(e) => {editLecture(lecture, schedule); setVisible(true)}}
+                                onMouseEnter={(e) => {onMouseEnterHandel(lecture.slug)}}
+                                onMouseLeave={(e) => {onMouseLeaveHandel(lecture.slug)}}
                                 >
-                                  <CToaster placement="middle-start">
-                                  <CToast autohide={false} visible={visibleLectureToast}>
+
+                                  <CToaster placement="top-start">
+                                  <CToast autohide={false} visible={visibleLectureToast[lecture.slug]}>
+
                                     <CToastHeader closeButton>
                                       <svg
                                         className="rounded me-2"
@@ -190,7 +213,7 @@ const Timetable = () => {
                                         focusable="false"
                                         role="img"
                                       >
-                                        <rect width="100%" height="100%" fill="#007aff"></rect>
+                                        <rect width="100%" height="100%" fill="#007AFF"></rect>
                                       </svg>
                                       <div className="fw-bold me-auto">CoreUI for React.js</div>
                                       <small>7 min ago</small>
@@ -215,5 +238,4 @@ const Timetable = () => {
     </>
   )
 }
-
 export default Timetable

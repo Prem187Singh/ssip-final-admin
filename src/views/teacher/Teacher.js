@@ -34,7 +34,7 @@ import {
     CFormCheck,
     
   } from '@coreui/react'
-
+import { showAlert } from 'src/global_function/GlobalFunctions'
 
 
 
@@ -80,6 +80,7 @@ const CustomStyles = (setTeacherlist) => {
         password:Teacher_password
       }
       add_Teacher(body)
+      showAlert("success","Teacher Added successfully...!")
     }
     return (
       <CForm

@@ -11,11 +11,11 @@ import { CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavTitle,
-    name: 'Manage',
+    name: 'ADMNISTRATION',
   },
   {
     component: CNavItem,
-    name: 'Dashbord',
+    name: 'Dashboard',
     to: '/',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
