@@ -215,10 +215,16 @@ const Timetable = () => {
                                       >
                                         <rect width="100%" height="100%" fill="#007AFF"></rect>
                                       </svg>
-                                      <div className="fw-bold me-auto">CoreUI for React.js</div>
-                                      <small>7 min ago</small>
+                                      <div className="fw-bold me-auto">Lecture Details</div>
+                                      
                                     </CToastHeader>
-                                    <CToastBody>Hello, world! This is a toast message.</CToastBody>
+                                    <CToastBody>
+                                      <strong>Classroom</strong> - {lecture.classroom.class_name}
+                                      <br></br>
+                                      <strong>Teacher</strong> - {lecture.teacher.profile.name}
+                                      <br></br>
+                                      <strong>Time</strong> - {lecture.start_time} <strong>To</strong> {lecture.end_time}
+                                    </CToastBody>
                                   </CToast>
                                 </CToaster>
                                 {lecture.subject ? (<div><strong style={{color:'gray'}}>{lecture.subject.subject_name}</strong></div>) : '-'}

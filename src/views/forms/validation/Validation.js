@@ -122,6 +122,7 @@ const loadBatches = async() => {
     let endpoint = `/manage/get_batches`;let method='get';let headers = header;
     let response_obj = await APIMiddleware(axiosInstance,endpoint,method,headers,null,null)
     if(response_obj.error == false){
+      let response = response_obj.response
       ctxDispatch({ type: 'GET_BATCHES', payload: response.data.data });      
       response.data.data.map((item)=>{
           if(item.active){
