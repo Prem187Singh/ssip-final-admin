@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -20,6 +21,8 @@ const Spinners = React.lazy(() => import('./views/base/spinners/Spinners'))
 const Tables = React.lazy(() => import('./views/base/tables/Tables'))
 const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
 const Timetable = React.lazy(() => import('./views/timetable/Timetable'))
+
+const Teacherview = React.lazy(() => import('./views/teacher/Teacherview'));
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
 const ButtonGroups = React.lazy(() => import('./views/buttons/button-groups/ButtonGroups'))
@@ -52,6 +55,8 @@ const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
+
+
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -103,7 +108,8 @@ const routes = [
   { path: '/TeacherSidebar',name:'TeacherSidebar',element:TeacherSidebar},
   { path: '/logout',name:'Logout',element:Logout},
   { path: '/timetable',name:'Timetable',element:Timetable},
+  { path: '/teacherview',name:'Teacherview',element:Teacherview},
   
 ]
 
-export default routes
+ export default routes;

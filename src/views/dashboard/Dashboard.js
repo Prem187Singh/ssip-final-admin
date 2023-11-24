@@ -30,7 +30,9 @@ const Dashboard = () => {
   const { accessToken , refreshToken , profileDetails, objectCount } = state  
 
   useEffect(() => {               
+    if(profileDetails["role"] === "admin"){
       getObjectCounts()    
+    }
   }, []);
   
   const getObjectCounts = async () =>{

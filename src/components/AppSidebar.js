@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
+import { useContext } from 'react'
+import { Store } from 'src/views/forms/validation/store'
 import { CSidebar, CSidebarBrand, CSidebarNav } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -17,6 +18,10 @@ import smartrollicon from '../smartroll_logo.png'
 import navigation from '../_nav'
 
 const AppSidebar = () => {
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { accessToken, refreshToken, profileDetails } = state
+  console.log("here")
+  console.log(profileDetails)
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -34,7 +39,7 @@ const AppSidebar = () => {
       <img className="p-3" src={smartrollicon}></img>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={profileDetails["role"] === "admin" ? navigation.admin_role : navigation.teacher_role} />
         </SimpleBar>
       </CSidebarNav>
     </CSidebar>

@@ -5,12 +5,14 @@ import { useContext } from 'react';
 import { Store } from 'src/views/forms/validation/store';
 import axios from 'axios';
 import base_url from 'src/base_url';
+import { jwtDecode } from "jwt-decode";
 import expireToken from 'src/global_function/unauthorizedToken';
 import LoadingBar from 'react-top-loading-bar';
 
 const DefaultLayout = () => {
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { accessToken , refreshToken , profileDetails} = state
+  const { accessToken , refreshToken} = state
+
   const [_404,set404] = useState(true)
   const [accessTokenValid,setAccessTokenValid] = useState(false)
   const [progress,setProgress] = useState(0);  
@@ -47,26 +49,36 @@ const DefaultLayout = () => {
     axios.get(`${base_url}/check_server_avaibility/`,{headers:header})
     .then((response)=>{
       set404(false) 
+      console.log("here")
       console.log(response.data)
     })
     .catch((error)=>{             
       navigate("/404")
     })
   }
+
+  const decodeToken= () => {
+    const decoded = jwtDecode(accessToken);      
+    ctxDispatch({ type: 'SET_PROFILE', payload: decoded.profile});        
+  }
   
   useEffect(() => {
     if(_404){      
+
       checkServerAvaibility()
     }else{
-      checkAccessTokenAuthenticity()
+        checkAccessTokenAuthenticity()
     }
   },[_404])
 
    useEffect(() => {
     if(!accessToken){
         navigate("/login")
+    }
+    else{
+      decodeToken()
     }    
-  }, []);    
+  }, [accessToken]);    
   useEffect(() => {
     console.log(accessTokenValid)
   },[accessTokenValid])
