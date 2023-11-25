@@ -5,22 +5,20 @@ import axios from 'axios'
 import base_url from 'src/base_url'
 import { useContext } from 'react'
 import { Store } from 'src/views/forms/validation/store'
-import { jwtDecode } from "jwt-decode";
+
 import expireToken from 'src/global_function/unauthorizedToken'
 import { APIMiddleware } from 'src/global_function/GlobalFunctions'
 
 // routes config
 import routes from '../routes'
+import { cilFace } from '@coreui/icons'
 
 const AppContent = () => {
     const { state, dispatch: ctxDispatch } = useContext(Store);
-    const { accessToken, refreshToken, batches,accessTokenActive } = state 
+    const { accessToken, refreshToken, batches,accessTokenActive , profileDetails} = state 
     const navigate = useNavigate();     
 
-    const decodeToken= () => {
-      const decoded = jwtDecode(accessToken);
-      ctxDispatch({ type: 'SET_PROFILE', payload: decoded.profile});        
-    }
+    
     const loadBatches = async() => {
       const header = {
         "Content-Type":"application/json",        
@@ -44,8 +42,11 @@ const AppContent = () => {
 
     useEffect(() => {      
       if(accessToken){        
-        decodeToken()
-        loadBatches()
+        
+        console.log(profileDetails['role'])
+        if(profileDetails["role"] === "admin"){
+          loadBatches()
+        }
       }
     }, []);
   return (
@@ -65,7 +66,16 @@ const AppContent = () => {
               )
             )
           })}
-          <Route path="/" element={<Navigate to="dashboard" replace />} />
+          {
+            console.log(profileDetails["role"])
+          }
+          {
+            profileDetails["role"] === "admin" ? (<Route path="/" element={<Navigate to="dashboard" replace />} />) : <Route path="/" element={<Navigate to="teacherview" replace />}/>
+            
+          }
+
+          
+          
         </Routes>
       </Suspense>
     </CContainer>
